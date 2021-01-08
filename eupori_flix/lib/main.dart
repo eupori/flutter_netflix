@@ -1,9 +1,14 @@
 import 'package:eupori_flix/screen/home_screen.dart';
+import 'package:eupori_flix/screen/like_screen.dart';
 import 'package:eupori_flix/screen/more_screen.dart';
+import 'package:eupori_flix/screen/search_screen.dart';
 import 'package:eupori_flix/widget/bottom_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -28,16 +33,8 @@ class _MyAppState extends State<MyApp> {
             physics: NeverScrollableScrollPhysics(),
             children: <Widget>[
               HomeScreen(),
-              Container(
-                child: Center(
-                  child: Text('search'),
-                ),
-              ),
-              Container(
-                child: Center(
-                  child: Text('save'),
-                ),
-              ),
+              SearchScreen(), 
+              LikeScreen(),
               MoreScreen(),
             ],
           ),

@@ -21,7 +21,7 @@ class _CarouselImageState extends State<CarouselImage> {
   void initState() {
     super.initState();
     movies = widget.movies;
-    images = movies.map((m) => Image.asset('./images/' + m.poster)).toList();
+    images = movies.map((m) => Image.network(m.poster)).toList();
     keywords = movies.map((m) => m.keyword).toList();
     likes = movies.map((m) => m.like).toList();
     _currentKeyword = keywords[0];
@@ -61,11 +61,25 @@ class _CarouselImageState extends State<CarouselImage> {
                       likes[_currentPage]
                           ? IconButton(
                               icon: Icon(Icons.check),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  likes[_currentPage] = !likes[_currentPage];
+                                  movies[_currentPage]
+                                      .reference
+                                      .update({'like': likes[_currentPage]});
+                                });
+                              },
                             )
                           : IconButton(
                               icon: Icon(Icons.add),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  likes[_currentPage] = !likes[_currentPage];
+                                  movies[_currentPage]
+                                      .reference
+                                      .update({'like': likes[_currentPage]});
+                                });
+                              },
                             ),
                       Text(
                         '내가 찜한 콘텐츠',
@@ -78,7 +92,10 @@ class _CarouselImageState extends State<CarouselImage> {
                   padding: EdgeInsets.only(right: 10),
                   child: FlatButton(
                     color: Colors.white,
-                    onPressed: () {},
+                    onPressed: () {
+                      print('준비중입니다.');
+                      _showDialog();
+                    },
                     child: Row(
                       children: [
                         Icon(
@@ -100,14 +117,16 @@ class _CarouselImageState extends State<CarouselImage> {
                   padding: EdgeInsets.only(right: 10),
                   child: Column(
                     children: [
-                      IconButton(icon: Icon(Icons.info), onPressed: () {
-
-                      Navigator.of(context).push(MaterialPageRoute<Null>(
-                          fullscreenDialog: true,
-                          builder: (BuildContext context) {
-                            return DetailScreen(movie: movies[_currentPage]);
-                          }));
-                      }),
+                      IconButton(
+                          icon: Icon(Icons.info),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute<Null>(
+                                fullscreenDialog: true,
+                                builder: (BuildContext context) {
+                                  return DetailScreen(
+                                      movie: movies[_currentPage]);
+                                }));
+                          }),
                       Text(
                         "정보",
                         style: TextStyle(fontSize: 11),
@@ -127,6 +146,26 @@ class _CarouselImageState extends State<CarouselImage> {
         ],
       ),
     );
+  }
+
+  void _showDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            title: new Text('개발중인 기능'),
+            content: new Text('현재 개발 진행중입니다.\n다음에 사용해주세요.'),
+            actions: <Widget>[
+              new FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: new Text('닫기'))
+            ],
+          );
+        });
   }
 }
 

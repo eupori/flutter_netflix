@@ -1,5 +1,4 @@
 import 'package:eupori_flix/model/model_movie.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
@@ -33,7 +32,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('images/' + widget.movie.poster),
+                      image: NetworkImage(widget.movie.poster),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -48,8 +47,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             children: [
                               Container(
                                 padding: EdgeInsets.fromLTRB(0, 45, 0, 10),
-                                child: Image.asset(
-                                    'images/' + widget.movie.poster),
+                                child: Image.network(widget.movie.poster),
                                 height: 300,
                               ),
                               Container(
@@ -73,7 +71,9 @@ class _DetailScreenState extends State<DetailScreen> {
                               Container(
                                 padding: EdgeInsets.all(3),
                                 child: FlatButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    _showDialog();
+                                  },
                                   color: Colors.red,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +123,12 @@ class _DetailScreenState extends State<DetailScreen> {
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        setState(() {
+                          like = !like;
+                          widget.movie.reference.update({'like': like});
+                        });
+                      },
                       child: Column(
                         children: [
                           like ? Icon(Icons.check) : Icon(Icons.add),
@@ -143,7 +148,10 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
-                    child: Container(
+                    child: InkWell(
+                      onTap: () {
+                        _showDialog();
+                      },
                       child: Column(
                         children: [
                           Icon(Icons.thumb_up),
@@ -163,7 +171,10 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
-                    child: Container(
+                    child: InkWell(
+                      onTap: () {
+                        _showDialog();
+                      },
                       child: Column(
                         children: [
                           Icon(Icons.send),
@@ -188,5 +199,25 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
       ),
     ));
+  }
+
+  void _showDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            title: new Text('개발중인 기능'),
+            content: new Text('현재 개발 진행중입니다.\n다음에 사용해주세요.'),
+            actions: <Widget>[
+              new FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: new Text('닫기'))
+            ],
+          );
+        });
   }
 }
